@@ -30,8 +30,6 @@ public class Controller implements Initializable {
 	private ListProperty<String> codHoteles = new SimpleListProperty<>(FXCollections.observableArrayList());
 	private ListProperty<String> listaHabitaciones = new SimpleListProperty<>(FXCollections.observableArrayList());
 
-
-
 	public final StringProperty codHotelProperty() {
 		return this.codHotel;
 	}
@@ -62,8 +60,8 @@ public class Controller implements Initializable {
 	@FXML
 	private TableView<Reservas> reservasTable;
 
-    @FXML
-    private TableColumn<Reservas, String> arrivalTable;
+	@FXML
+	private TableColumn<Reservas, String> arrivalTable;
 
 	@FXML
 	private TableColumn<Reservas, String> departureTable;
@@ -73,9 +71,9 @@ public class Controller implements Initializable {
 
 	@FXML
 	private ComboBox<String> comboHoteles;
-	
+
 	@FXML
-    private ComboBox<String> comboHabitaciones;
+	private ComboBox<String> comboHabitaciones;
 
 	@FXML
 	private Button deleteButton;
@@ -105,7 +103,6 @@ public class Controller implements Initializable {
 		// bindings
 		reservasTable.itemsProperty().bind(reservasList);
 		codHotel.bind(comboHoteles.getSelectionModel().selectedItemProperty());
-		
 
 		codHotel.addListener((o, ov, nv) -> {
 			reservasList.clear();
@@ -119,12 +116,11 @@ public class Controller implements Initializable {
 		handler.conection();
 		codHoteles.setAll(handler.getListaHoteles());
 		comboHoteles.setItems(codHoteles);
-	
 
 		nameTable.setCellValueFactory(v -> v.getValue().nameProperty());
 		arrivalTable.setCellValueFactory(v -> v.getValue().dateArrivalProperty());
 		departureTable.setCellValueFactory(v -> v.getValue().dateDepartureProperty());
-		
+
 		nameTable.setCellFactory(TextFieldTableCell.forTableColumn());
 	}
 
@@ -135,10 +131,13 @@ public class Controller implements Initializable {
 
 	@FXML
 	void onDeleteAction(ActionEvent event) {
-		String id = reservasList.get(reservasTable.getSelectionModel().selectedIndexProperty().get()).getId();
-		handler.deleteReserva(id, getCodHotel());
-		reservasList.remove(reservasTable.getSelectionModel().selectedIndexProperty().get());
-		
+
+		if (!reservasTable.getSelectionModel().isEmpty()) {
+			String id = reservasList.get(reservasTable.getSelectionModel().selectedIndexProperty().get()).getId();
+			handler.deleteReserva(id, getCodHotel());
+			reservasList.remove(reservasTable.getSelectionModel().selectedIndexProperty().get());
+		}
+
 	}
 
 	@FXML
@@ -149,38 +148,73 @@ public class Controller implements Initializable {
 		dialog.setHeaderText("Añadir el nombre del usuario");
 		dialog.setContentText("Nombre: ");
 		Optional<String> name = dialog.showAndWait();
-		
+
 		TextInputDialog dialog1 = new TextInputDialog();
 		dialog1.initOwner(HotelesApp.primaryStage);
-		dialog1.setTitle("Fecha"); 
+		dialog1.setTitle("Fecha");
 		dialog1.setHeaderText("Añadir fecha de inicio");
 		dialog1.setContentText("Fecha inicio: ");
 		Optional<String> fechaInicio = dialog1.showAndWait();
-		
+
 		TextInputDialog dialog2 = new TextInputDialog();
 		dialog2.initOwner(HotelesApp.primaryStage);
 		dialog2.setTitle("Fecha");
 		dialog2.setHeaderText("Añadir fecha de salida");
 		dialog2.setContentText("Fecha de salida: ");
 		Optional<String> fechaFin = dialog2.showAndWait();
-		
-		
+
 		ChoiceDialog<String> dialog4 = new ChoiceDialog<String>(null, listaHabitaciones);
 		dialog4.initOwner(HotelesApp.primaryStage);
 		dialog4.setTitle("Eleccion");
 		dialog4.setHeaderText("Elige una habitacion");
 		dialog4.setContentText("Habitacion: ");
 		String hab = dialog4.showAndWait().orElse(null);
-		
+
 		reservasList.add(new Reservas(name.get(), fechaInicio.get(), fechaFin.get(), hab));
-		handler.insertReserva(reservasList.get(reservasList.size()-1), getCodHotel(), hab);
-		
+		handler.insertReserva(reservasList.get(reservasList.size() - 1), getCodHotel(), hab);
+
 	}
 
 	@FXML
 	void onUpdateAction(ActionEvent event) {
+		if (!reservasTable.getSelectionModel().isEmpty()) {
+			String id = reservasList.get(reservasTable.getSelectionModel().selectedIndexProperty().get()).getId();
+			reservasList.remove(reservasTable.getSelectionModel().selectedIndexProperty().get());
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.initOwner(HotelesApp.primaryStage);
+			dialog.setTitle("Usuario");
+			dialog.setHeaderText("Cambiar nombre del usuario");
+			dialog.setContentText("Nombre: ");
+			Optional<String> name = dialog.showAndWait();
+
+			TextInputDialog dialog1 = new TextInputDialog();
+			dialog1.initOwner(HotelesApp.primaryStage);
+			dialog1.setTitle("Fecha");
+			dialog1.setHeaderText("Cambiar fecha de inicio");
+			dialog1.setContentText("Fecha inicio: ");
+			Optional<String> fechaInicio = dialog1.showAndWait();
+
+			TextInputDialog dialog2 = new TextInputDialog();
+			dialog2.initOwner(HotelesApp.primaryStage);
+			dialog2.setTitle("Fecha");
+			dialog2.setHeaderText("Cambiar de salida");
+			dialog2.setContentText("Fecha de salida: ");
+			Optional<String> fechaFin = dialog2.showAndWait();
+
+			ChoiceDialog<String> dialog4 = new ChoiceDialog<String>(null, listaHabitaciones);
+			dialog4.initOwner(HotelesApp.primaryStage);
+			dialog4.setTitle("Eleccion");
+			dialog4.setHeaderText("Elige una habitacion");
+			dialog4.setContentText("Habitacion: ");
+			String hab = dialog4.showAndWait().orElse(null);
+
+			reservasList.add(new Reservas(name.get(), fechaInicio.get(), fechaFin.get(), hab));
+			handler.updateReserva(reservasList.get(reservasList.size() - 1), id, getCodHotel(), hab);
+
+			System.out.println(id);
+
+		}
 
 	}
-
 
 }

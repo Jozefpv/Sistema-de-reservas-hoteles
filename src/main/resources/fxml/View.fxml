@@ -15,7 +15,7 @@
             <ComboBox fx:id="comboHoteles" prefWidth="150.0" promptText="Elige hotel" />
             <ComboBox fx:id="comboHabitaciones" prefWidth="150.0" />
             <Button fx:id="deleteButton" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" onAction="#onDeleteAction" text="Eliminar" />
-            <Button fx:id="updateButton" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" text="Actualizar" />
+            <Button fx:id="updateButton" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" onAction="#onUpdateAction" text="Actualizar" />
             <Button fx:id="insertButton" minHeight="-Infinity" minWidth="100.0" mnemonicParsing="false" onAction="#onInsertAction" text="Insertar" />
          </children>
          <padding>

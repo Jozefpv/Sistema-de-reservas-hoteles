@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -107,6 +106,26 @@ public class HandlerSQL {
 			ps.setString(3, reserva.getDateDeparture());
 			ps.setString(4, numHabitacion);
 			ps.setString(5, codHotel);
+
+			ps.execute();
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+	public void updateReserva(Reservas reserva, String id, String codHotel, String numHabitacion) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE estancias SET nombre=(?), fechaInicio=(?), fechaFin=(?), numHabitacion=(?) where codHotel=(?) and id=(?) ");
+			ps.setString(1, reserva.getName());
+			ps.setString(2, reserva.getDateArrival());
+			ps.setString(3, reserva.getDateDeparture());
+			ps.setString(4, numHabitacion);
+			ps.setString(5, codHotel);
+			ps.setString(6, id);
+			
 
 			ps.execute();
 
